@@ -8,6 +8,8 @@
 
 目录最初为空，不会自动公开用户的已有题库。
 
+公开下载文件也发布到 [GitHub Pages](https://noir839248279.github.io/study-sync-banks/catalog.json)。这里只部署目录和题库 JSON；不部署 App 源码，也不需要访问令牌。App 优先使用此地址，必要时回退到 GitHub 原始文件地址。
+
 ## 投稿
 
 1. 在 App 的“云端题库 → 我要投稿”选一门课程，检查题目和答案，填写署名、来源及授权说明。

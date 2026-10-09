@@ -27,6 +27,10 @@ jobs:
     permissions:
       contents: write
       issues: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
     steps:
       - uses: actions/checkout@v4
         with:
@@ -52,3 +56,12 @@ jobs:
             git commit -m 'Publish reviewed community catalog'
             git push origin HEAD:main
           fi
+      - run: |
+          mkdir -p _site
+          cp catalog.json _site/
+          if test -d banks; then cp -r banks _site/; fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - uses: actions/deploy-pages@v4

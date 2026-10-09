@@ -4,11 +4,17 @@ import { mkdtemp,writeFile,readFile,readdir,rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
-import { publish,unlist,attachmentURL,downloadAttachment } from '../scripts/publish.mjs';
+import { publish,unlist,attachmentURL,downloadAttachment,verifyReview } from '../scripts/publish.mjs';
 import { BANK_LIMIT } from '../schema/bank.ts';
 const q={id:'q1',course:'合成课程',chapter:'章节',type:'判断题',question:'合成测试内容',answer:'正确',options:[],note:'private'};
 const submission={format:'study-sync-submission',version:1,title:'测试',description:'',author:'署名',license:'测试材料',questions:[q],events:['private']};
 const issue={number:42,user:{login:'test-user'}};
+test('publisher binds the attachment to the actual reviewed file',()=>{
+  const bytes=Buffer.from('reviewed'); const digest=createHash('sha256').update(bytes).digest('hex');
+  verifyReview(bytes,digest.toUpperCase());
+  assert.throws(()=>verifyReview(Buffer.from('replaced'),digest));
+  assert.throws(()=>verifyReview(bytes,''));
+});
 async function temp(t){const dir=await mkdtemp(path.join(os.tmpdir(),'community-'));t.after(()=>rm(dir,{recursive:true,force:true}));await writeFile(path.join(dir,'catalog.json'),JSON.stringify({format:'study-sync-catalog',version:1,updatedAt:'2026-10-09T00:00:00Z',banks:[]}));return dir;}
 test('review snapshots are sanitized, immutable, versioned, and can be unlisted',async t=>{
   const root=await temp(t),first=await publish(root,submission,issue);

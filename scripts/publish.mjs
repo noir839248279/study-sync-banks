@@ -5,6 +5,9 @@ import path from 'node:path';
 import { BANK_LIMIT, CATALOG_LIMIT, validateSubmission, validateCatalog } from '../schema/bank.ts';
 
 export const REPO = 'noir839248279/study-sync-banks';
+export function verifyReview(bytes, expected) {
+  if (typeof expected !== 'string' || !/^[a-f0-9]{64}$/i.test(expected) || createHash('sha256').update(bytes).digest('hex') !== expected.toLowerCase()) throw Error('附件与审核文件的 SHA-256 不一致，请重新审核');
+}
 export function attachmentURL(body) {
   const matches = [...String(body).matchAll(/https:\/\/github\.com\/user-attachments\/files\/[^\s)<>"']+/g)].map(m => m[0]);
   const urls = [...new Set(matches.filter(s => /\.json$/i.test(s)))];
@@ -78,6 +81,7 @@ async function main() {
   const issue = await response.json();
   if (issue.number !== number || issue.pull_request) throw Error('必须选择这个仓库中的普通 Issue');
   const bytes = await downloadAttachment(attachmentURL(issue.body));
+  verifyReview(bytes, process.env.REVIEW_SHA256);
   const raw = JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
   const bank = await publish(root,raw,issue);
   console.log(`Published ${bank.id} v${bank.version}: ${bank.count} questions`);

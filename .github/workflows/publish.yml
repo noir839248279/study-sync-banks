@@ -11,6 +11,10 @@ on:
         required: true
         type: choice
         options: [publish, unlist]
+      sha256:
+        description: SHA-256 of the JSON file you downloaded and reviewed (required for publish)
+        required: false
+        type: string
 permissions:
   contents: read
 concurrency:
@@ -36,6 +40,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           ISSUE_NUMBER: ${{ inputs.issue }}
           PUBLISH_ACTION: ${{ inputs.action }}
+          REVIEW_SHA256: ${{ inputs.sha256 }}
         run: node scripts/publish.mjs
       - name: Commit catalog snapshot
         run: |

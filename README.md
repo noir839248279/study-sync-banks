@@ -19,10 +19,11 @@
 ## 管理员审核及上架
 
 1. 打开投稿 Issue，下载附件，检查来源、授权、题目和答案。自动校验不能替代内容审核。
-2. 在 Actions 选择 **Review and publish a bank → Run workflow**，分支选 `main`，输入审核过的 Issue 编号，action 选 `publish`。
-3. 运行成功后刷新 App 目录。文件编号为 `issue-编号`。每次重新发布保存一个新版本，旧版本不覆盖。作者的 GitHub 用户名来自 Issue 作者，署名来自投稿表单。
+2. 计算这份已下载、审核的 JSON 文件的 SHA-256。Windows PowerShell 示例：`(Get-FileHash -LiteralPath 'D:\下载目录\投稿文件.json' -Algorithm SHA256).Hash`。复制结果。
+3. 在 Actions 选择 **Review and publish a bank → Run workflow**，分支选 `main`，输入审核过的 Issue 编号，action 选 `publish`，sha256 填刚才的摘要。
+4. 运行成功后刷新 App 目录。文件编号为 `issue-编号`。每次重新发布保存一个新版本，旧版本不覆盖。作者的 GitHub 用户名来自 Issue 作者，署名来自投稿表单。
 
-只有仓库所有者可运行发布作业。发布作业只读取这个仓库的 Issue 中一个 GitHub JSON 附件，经过字段白名单和大小校验后写入快照。附件请求不携带仓库令牌。不执行附件内容、不检出投稿者代码、没有 `pull_request_target` 工作流。
+只有仓库所有者可运行发布作业。发布作业只读取这个仓库的 Issue 中一个 GitHub JSON 附件，确认它与管理员实际审核的文件摘要一致，再经过字段白名单和大小校验后写入快照。投稿者在审核期间替换附件会导致发布失败。附件请求不携带仓库令牌。不执行附件内容、不检出投稿者代码、没有 `pull_request_target` 工作流。
 
 修订题库请编辑原 Issue，移除旧附件链接并上传一个新 JSON，然后重新审核、发布。App 明确提示更新的题目数量，用户确认后才替换题干及答案；原有作答记录保留。请保留修订题目的原始编号，删除的题目不会自动删除用户本机数据。
 

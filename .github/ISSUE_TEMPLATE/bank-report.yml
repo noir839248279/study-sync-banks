@@ -1,0 +1,17 @@
+name: 题库反馈
+description: 报告错题、内容问题或申请下架
+title: "题库反馈："
+body:
+  - type: input
+    id: bank
+    attributes:
+      label: 题库名称或编号
+    validations:
+      required: true
+  - type: textarea
+    id: detail
+    attributes:
+      label: 问题说明
+      description: 请写出题号、问题及参考依据。如涉及私人信息，请勿在公开 Issue 中重复张贴。
+    validations:
+      required: true

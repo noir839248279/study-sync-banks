@@ -1,0 +1,30 @@
+name: 题库投稿
+description: 提交题库，审核后列入知序 App 云端目录
+title: "[题库投稿] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请先在知序的“本机题库 → 云端题库 → 我要投稿”生成投稿 JSON，再在下面添加附件。
+        Issue 和附件提交后即公开。请勿上传学习备份、个人资料或无权分享的材料。
+        投稿不会授予仓库写入权限。审核通过后，管理员发布文件快照，App 才会显示它。
+  - type: textarea
+    id: attachment
+    attributes:
+      label: 投稿 JSON 附件
+      description: 在输入框下面选择文件，或用电脑将一个 .json 文件拖入此输入框。请勿粘贴网盘链接或完整学习备份。
+      placeholder: 只添加一个由 App 生成的 .json 附件
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: 补充说明（选填）
+      description: 如为已上架题库的修订，请编辑原投稿 Issue 的附件，并说明更改。
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: 分享确认
+      options:
+        - label: 我已检查附件，可以公开分享，不含私人信息，并已说明来源与使用授权。
+          required: true
